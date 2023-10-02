@@ -1,3 +1,4 @@
+#Author: Zachary Williams
 # VERSION 5 added timer that waits for webpage 
 import random
 import time
