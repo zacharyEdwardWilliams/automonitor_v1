@@ -84,7 +84,7 @@ max_retry_attempts = 3  # Adjust the number of retry attempts as needed
 for attempt in range(max_retry_attempts):
     try:
         # Set a longer timeout for accessing the camera feed (adjust as needed)
-        driver.set_page_load_timeout(60)  # 60 seconds
+        driver.set_page_load_timeout(20)  # 20 seconds
         driver.get(selected_camera_url)
         break  # Exit the loop if successful
     except TimeoutException:
