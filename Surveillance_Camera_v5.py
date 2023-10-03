@@ -11,6 +11,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 
+# import required module
+from pydub import AudioSegment
+from pydub.playback import play
+
 # Define the number of times you want to repeat the process using prompt
 num_iterations = int(input("Enter desired number of images: "))
 counter = num_iterations # Counter for end message
@@ -125,3 +129,11 @@ print(*png_arr_str, sep='\n')
 print("\n")
 
 print("Complete! Please come again!")
+
+# insert whatever pathname you have for project to play sound after program is complete
+# created this so the program can run in the background while I do other tasks and then 
+# inform me through a sound when it's complete. 
+song = AudioSegment.from_mp3("sfx_red_door_open_fanfare.mp3")
+play(song)
+
+
