@@ -1,5 +1,5 @@
-#Author: Zachary Williams
-# VERSION 6 added ability to loop through code to get multiple photos
+# Author: Zachary Williams
+# Version 7 : Added looping, and optimized randomization of page selection
 import random
 import time
 from selenium import webdriver
