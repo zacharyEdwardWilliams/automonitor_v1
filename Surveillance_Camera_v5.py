@@ -1,5 +1,5 @@
 # Author: Zachary Williams
-# Version 7 : Added looping, and optimized randomization of page selection
+# Version 7 : Optimized randomization of page selection
 import random
 import time
 from selenium import webdriver
