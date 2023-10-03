@@ -88,10 +88,11 @@ for _ in range(num_iterations):
             break  # Exit the loop if successful
         except TimeoutException:
             if attempt == max_retry_attempts - 1:
-                break
-                # print("Timeout: Camera feed didn't load within the specified time after retries.")
-                # driver.quit()
-                # exit()
+                print("Timeout: Camera feed didn't load within the specified time after retries.")
+                driver.quit()
+                failed = AudioSegment.from_mp3("sfx_red_door_open_fanfare.mp3")
+                play(failed)
+                exit()
             else:
                 print(f"Retry attempt {attempt + 1}...\n")
                 time.sleep(5)  # Wait for a few seconds before retrying
