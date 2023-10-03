@@ -1,6 +1,6 @@
 
 # Author: Zachary Williams
-# Version 7 : Optimized randomization of page selection
+# Version 8 : Added filename print loop / status messages / adjusted timers
 import random
 import time
 from selenium import webdriver
@@ -11,8 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 
-# Define the number of times you want to repeat the process
-num_iterations = 6  # Change this to the desired number of iterations
+# Define the number of times you want to repeat the process using prompt
+num_iterations = int(input("Enter desired number of images: "))
 counter = num_iterations # Counter for end message
 png_arr_str = [] # Array of saved .png files to print at the completion of loop
 
