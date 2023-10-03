@@ -1,3 +1,4 @@
+
 # Author: Zachary Williams
 # Version 7 : Optimized randomization of page selection
 import random
@@ -12,9 +13,9 @@ from bs4 import BeautifulSoup
 
 # Define the number of times you want to repeat the process
 num_iterations = 6  # Change this to the desired number of iterations
+counter = num_iterations # Counter for end message
+png_arr_str = [] # Array of saved .png files to print at the completion of loop
 
-# random integer from 0 to 900 for page selection
-arrow_random = random.randint(1, 900)
 
 # Step 1: Set up Selenium WebDriver
 chrome_options = Options()
@@ -23,44 +24,32 @@ chrome_options.add_argument("--headless")  # Run browser in headless mode
 for _ in range(num_iterations):
     driver = webdriver.Chrome(options=chrome_options)
 
-    # Step 2: Navigate to the website
+    print('Driver initialized.')
+
+    # roll for random page each iteration
+    # random integer from 0 to 900 for page selection
+    arrow_random = random.randint(1, 900)
+
+    print('Connecting to website. \nThis may take awhile, please wait...\n')
+    # Step 2: Navigate to the website page
     base_url = "http://insecam.org/en/bynew/?page=" + str(arrow_random)
     driver.get(base_url)
 
     # Wait for the page to load (adjust the wait time as needed)
-    wait = WebDriverWait(driver, 20)  # Increased the wait time to 20 seconds
+    wait = WebDriverWait(driver, 5)  # Decrease the wait time to 5 seconds
     try:
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, "thumbnail-item__img")))
     except TimeoutException:
         print("Timeout: Page didn't load within the specified time.")
         driver.quit()
         exit()
-
-    # Step 3: Find the total number of pages
-    page_elements = driver.find_elements(By.CSS_SELECTOR, "ul.pagination > li > a")
-    if not page_elements:
-        print("No pagination elements found on the page.")
-        driver.quit()
-        exit()
-
-    # Extract the page numbers
-    page_numbers = [int(page.text) for page in page_elements if page.text.isdigit()]
     
-    # If there are page numbers, select a random page
-    if page_numbers:
-        random_page = random.choice(page_numbers)
-        print('Random page selected: ' + str(random_page))
-
-        # Navigate to the selected random page with a delay
-        random_page_url = f"{base_url}?page={random_page}"
-        driver.get(random_page_url)
-        time.sleep(5)  # Adjust the sleep duration as needed
-
+    print(f"Attempting to navigate to page: {arrow_random}...\n")
 
     # Introduce a delay between page navigations
-    time.sleep(5)  # Adjust the sleep duration as needed
+    # time.sleep(5)  # Adjust the sleep duration as needed
 
-    print('Successfully navigated to selected random page')
+    print('Successfully navigated to selected random page\n')
 
     # Step 4: Find Camera Links with Title Attribute
     camera_elements = driver.find_elements(By.CLASS_NAME, "thumbnail-item")
@@ -95,11 +84,12 @@ for _ in range(num_iterations):
             break  # Exit the loop if successful
         except TimeoutException:
             if attempt == max_retry_attempts - 1:
-                print("Timeout: Camera feed didn't load within the specified time after retries.")
-                driver.quit()
-                exit()
+                break
+                # print("Timeout: Camera feed didn't load within the specified time after retries.")
+                # driver.quit()
+                # exit()
             else:
-                print(f"Retry attempt {attempt + 1}...")
+                print(f"Retry attempt {attempt + 1}...\n")
                 time.sleep(5)  # Wait for a few seconds before retrying
 
     # Step 7: Capture Screenshot
@@ -109,11 +99,14 @@ for _ in range(num_iterations):
     current_timestamp = int(time.time())  # Get current timestamp
     screenshot_file = f"{selected_camera_title}_{current_timestamp}.png"
 
+    # append screenshot name in .png filename array
+    png_arr_str.append(screenshot_file)
+
     # Step 9: Save Screenshot
     with open(screenshot_file, "wb") as file:
         file.write(screenshot)
 
-    print(f"Screenshot saved as {screenshot_file}")
+    print(f"Screenshot saved as {screenshot_file}\n")
 
     # Clean up
     driver.quit()
@@ -121,87 +114,14 @@ for _ in range(num_iterations):
     # add delay between iterations 
     time.sleep(5)  # Adjust the sleep duration as needed
 
+    counter-=1
+    if (counter > 0):
+        print(f"Success! \n\nIterations left: {counter}\n")
 
-##
+print('Here is a list of the images you saved:\n')
 
-# # VERSION 6 with Twitter automation
-# import random
-# import time
-# import requests
-# from selenium import webdriver
-# from selenium.webdriver.chrome.options import Options
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
-# from selenium.common.exceptions import TimeoutException
-# from bs4 import BeautifulSoup
+print(*png_arr_str, sep='\n')
 
-# # Twitter Bearer Token
-# bearer_token = ''  # Replace with your actual Bearer Token
+print("\n")
 
-# # Step 1: Set up Selenium WebDriver
-# chrome_options = Options()
-# chrome_options.add_argument("--headless")  # Run browser in headless mode
-# driver = webdriver.Chrome(options=chrome_options)
-
-# # Step 2: Navigate to the website
-# base_url = "http://insecam.org/en/bynew/"
-# driver.get(base_url)
-
-# print('Navigated to website')
-
-# # Wait for the page to load (adjust the wait time as needed)
-# wait = WebDriverWait(driver, 20)  # Increased the wait time to 20 seconds
-# try:
-#     wait.until(EC.presence_of_element_located((By.CLASS_NAME, "thumbnail-item__img")))
-# except TimeoutException:
-#     print("Timeout: Page didn't load within the specified time.")
-#     driver.quit()
-#     exit()
-
-# # Step 3: Find the total number of pages
-# page_elements = driver.find_elements(By.CSS_SELECTOR, "ul.pagination > li > a")
-# if not page_elements:
-#     print("No pagination elements found on the page.")
-#     driver.quit()
-#     exit()
-
-# # Extract the page numbers and select a random page
-# page_numbers = [int(page.text) for page in page_elements if page.text.isdigit()]
-# if not page_numbers:
-#     print("No page numbers found on the page.")
-#     driver.quit()
-#     exit()
-
-# random_page = random.choice(page_numbers)
-
-# ## print random page selected
-# print('Random page selected: ' + str(random_page))
-
-# # Navigate to the selected random page with a delay
-# random_page_url = f"{base_url}?page={random_page}"
-# driver.get(random_page_url)
-
-# # Introduce a delay between page navigations
-# time.sleep(5)  # Adjust the sleep duration as needed
-
-# print('Successfully navigated to selected random page')
-
-# # Step 4: Find Camera Links with Title Attribute
-# camera_elements = driver.find_elements(By.CLASS_NAME, "thumbnail-item")
-# camera_info = []
-
-# for camera_element in camera_elements:
-#     img_tag = camera_element.find_element(By.CLASS_NAME, "thumbnail-item__img")
-#     src_attr = img_tag.get_attribute("src")
-#     title_attr = img_tag.get_attribute("title")
-
-#     if src_attr and title_attr:
-#         camera_info.append((src_attr, title_attr))
-
-# # Check if there are camera links
-# if not camera_info:
-#     print("No camera links found on the page.")
-#     driver.quit()
-#     exit()
-
+print("Complete! Please come again!")
